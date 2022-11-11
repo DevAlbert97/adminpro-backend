@@ -6,10 +6,17 @@ const User = require('../models/user');
 
 const getUsers = async (req,res) =>{
 
-    const users = await User.find({}, 'name email role google');
+    const from = Number(req.query.from) || 0;
+
+    const [users, total] = await Promise.all([
+        User.find({}, 'name email role google img').skip(from).limit(5),
+        User.count()
+    ]);
+
     res.json({
         ok: true,
-        users
+        users,
+        total
     });
 }
 
@@ -45,7 +52,7 @@ const createUser = async (req,res=response) =>{
         res.status(500).json}({
             ok: false,
             msg: 'Error inesperado'
-        })
+        });
 }
 
 
@@ -82,14 +89,14 @@ const updateUser = async (req, res=response) => {
         res.json({
             ok: true,
             usuario: updatedUser
-        })
+        });
         
     } catch (error) {
         console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Error inesperado'
-        })
+        });
     }
 
 }
@@ -114,14 +121,14 @@ const deleteUser = async (req, res=response) => {
             ok: true,
             msg: 'El usuario fue eliminado correctamente.',
             uid
-        })
+        });
         
     } catch (error) {
         console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Hable con el administrador'
-        })
+        });
     }
 
 }
