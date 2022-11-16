@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
 
-const { login } = require("../controllers/auth");
+const { login, googleSignIn } = require("../controllers/auth");
 const fieldValidator = require("../middlewares/field-validator");
 
 const router = Router();
@@ -12,6 +12,10 @@ router.post('/',[
     fieldValidator,
     ],login);
 
+router.post('/google',[
+    check('token', 'El token de google es obligatoria').not().isEmpty(),
+    fieldValidator,
+    ],googleSignIn);
 
 
 

@@ -10,6 +10,9 @@ const app = express();
 // Config Cors
 app.use(cors());
 
+// Carpeta publica
+app.use(express.static('public'));
+
 // Lectura de body
 app.use(express.json());
 
