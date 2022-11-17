@@ -41,17 +41,73 @@ const createDoctor = async (req, res=response) => {
 }
 
 const updateDoctor = async (req, res=response) => {
-    res.json({
-        ok: true,
-        msg: ''
-    });
+
+    const did = req.params.id;
+    const uid = req.uid;
+
+    try {
+
+        const doctorDB = await Doctor.findById(did);
+
+        if (!doctorDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe un doctor con ese ID'
+            });
+        }
+
+        const doctorChanges = {
+            ...req.body,
+            user: uid
+        }
+
+        const doctorUpdated = await Doctor.findByIdAndUpdate(did, doctorChanges, {new:"true"});
+
+
+        res.json({
+            ok: true,
+            msg: 'Doctor Actualizado',
+            doctor: doctorUpdated
+        });
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+    }
 }
 
 const deleteDoctor = async (req, res=response) => {
-    res.json({
-        ok: true,
-        msg: ''
-    });    
+
+    const did = req.params.id;
+
+    try {
+
+        const doctorDB = await Doctor.findById(did);
+
+        if (!doctorDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe un doctor con ese ID'
+            });
+        }
+
+        await Doctor.findByIdAndDelete(did);
+
+        res.json({
+            ok: true,
+            msg: 'El doctor fue eliminado correctamente.',
+        });
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+    } 
 }
 
 module.exports = {

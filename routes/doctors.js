@@ -10,11 +10,16 @@ const router = Router();
 router.get('/', [], getDoctors);
 router.post('/',[
     JWTValidator, 
-    check('name', 'El nombre del hospital es necesario').not().isEmpty(),
+    check('name', 'El nombre del doctor es necesario').not().isEmpty(),
     check('hospital', 'El hospital id es necesario').isMongoId(),
     fieldValidator
 ], createDoctor);
-router.put('/:id',[], updateDoctor);
+router.put('/:id',[
+    JWTValidator, 
+    check('name', 'El nombre del doctor es necesario').not().isEmpty(),
+    check('hospital', 'El hospital es necesario').isMongoId(),
+    fieldValidator
+], updateDoctor);
 router.delete('/:id',[], deleteDoctor);
 
 module.exports = router;
